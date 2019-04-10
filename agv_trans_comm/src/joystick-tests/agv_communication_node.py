@@ -8,7 +8,7 @@ from agv_trans_comm.msg import Command
 from agv_trans_comm.msg import State
 
 
-# Author: Marcus Lindvärn
+# Author: Marcus Lindvarn
 '''
 def __init__ (self)
     last_command_recieved = ""

@@ -5,7 +5,7 @@ from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 from agv_trans_comm.msg import ButtonPress
 
-# Author: Marcus Lindvärn
+# Author: Marcus Lindvarn
 # This ROS Node converts Joystick inputs from the joy node
 # into commands for HRP
 # Small changes has been made from the original file to make 

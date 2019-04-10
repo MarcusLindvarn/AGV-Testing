@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
@@ -7,7 +8,7 @@ from agv_trans_comm.msg import Command
 from agv_trans_comm.msg import State
 
 
-# Author: Marcus Lindvärn
+# Author: Marcus Lindvarn
 '''
 def __init__ (self)
     last_command_recieved = ""
@@ -20,55 +21,58 @@ def __init__ (self)
     agv_state.state = ""
 '''
 def callback_commandcenter(data):
-    # update current and lastrecieved product to the recieved data - kanske kan skita i det helt och hållat då jag isnt svarar med ngt sådant
-    #agv_state = State()
+    # update current and lastrecieved product to the recieved data - might skip
     #last_product_recieved = data.product_name
     #agv_state.product_name = last_product_recieved
     last_run_recieved = data.run
-
+    
     #if a new command is recieved, update current command and refresh the view
+    print ("last_command_recieved: " + last_command_recieved + '\n')
+    print ("data.command: " + data.command + '\n')
+    print (last_command_recieved != data.command)
     if (last_command_recieved != data.command):
-        print ("last_command_recieved: " + last_command_recieved + '\n')
-        print ("data.command: " + data.command + '\n')
         last_command_recieved = data.command
         current_cmd = data.command
         agv_state.cmd = current_cmd
         refresh_view(self)
     
-    if (last_run_recieved == False and current_state == "finished")
+    if (last_run_recieved == False and current_state == "finished"):
         current_state = "init"
         agv_state.state = current_state
-    #publisha alltid på mottaget meddelande med current status.
+    #always anser a publish with a publish.
     ccpub.publish(agv_state)
 
 
 def callback_button_state(data):
     #agv_state = State()
-    # om X är nedtryckt, sät status till executing och publisha
-    print ("xpressed: " + data.xpressed + '\n')
-    print ("bpressed: " + data.bpressed + '\n')
-    if (data.xpressed = True):
-        current_state = "executing"
-        current_cmd = last_command_recieved
-        agv_state.state = current_state
-        agv_state.cmd = current_cmd
+    # if X is pressed, set status and send
+    #print ("xpressed: " + data.xpress + '\n')
+    #print ("bpressed: " + data.bpress + '\n')
+    if (current_state == "init"):
+        if (data.xpress == True):
+            current_state = "executing"
+          current_cmd = last_command_recieved
+           agv_state.state = current_state
+           agv_state.cmd = current_cmd
     
-    #om B är nedtrykt så sätt till finished, tömm cmd
-    if (data.bpressed = True):
-        current_state = "finished"
-        agv_state.state = current_state
-        current_cmd = ""
-        agv_state.cmd = current_cmd
-    #publicera med de nya ändringarna
+    # if B is pressed, set status and send
+    if (current_state == "executing"):
+        if (data.bpress == True):
+            current_state = "finished"
+            agv_state.state = current_state
+            current_cmd = ""
+            agv_state.cmd = current_cmd
+    #Publish with new changes
     ccpub.publish(agv_state)
 
-def refresh_view(self)
+def refresh_view(self):
     print('Last command: ' + last_command_recieved)
 
 # Intializes everything
 def start():    
+    global agv_state 
     agv_state = State()
-    __init__(self)
+    #__init__(self)
     global last_command_recieved
     global last_run_recieved
     global last_product_recieved
@@ -85,7 +89,7 @@ def start():
     agv_state.state = ""
     ccpub = rospy.Publisher('/AGV_state', State)
     #subscribing to the comandcenter topic as well as the buttionstates from the teleop.
-    rospy.Subscriber("/commandcenter", command, callback_commandcenter)
+    rospy.Subscriber("/commandcenter", Command, callback_commandcenter)
     rospy.Subscriber("/button_state", ButtonPress, callback_button_state)
     # starts the node
     rospy.init_node('AGVComms_node')

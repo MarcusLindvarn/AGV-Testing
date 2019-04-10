@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
 from agv_trans_comm.msg import ButtonPress
 
-# Author: Marcus Lindvärn
+# Author: Marcus Lindvarn
 # This ROS Node converts Joystick inputs from the joy node
 # into commands for HRP
 # Small changes has been made from the original file to make 
@@ -21,7 +22,7 @@ def callback(data):
     twist.linear.x = 0.4*data.axes[1]
     # horizontal left stick axis = turn rate
     twist.angular.z = 0.7*data.axes[0]
-    buttonpress.xpress = True
+    buttonpress.xpress = False
     buttonpress.bpress = False
     if (data.buttons[9]== 1):
         twist.linear.x = 0*data.axes[1]
@@ -41,7 +42,7 @@ def start():
     global pub
     pub = rospy.Publisher('/cmd_vel', Twist)
     global buttonpub
-    buttonpub = rospy.Publisher('/button_state', Twist)
+    buttonpub = rospy.Publisher('/button_state', ButtonPress)
     # subscribed to joystick inputs on topic "joy"
     rospy.Subscriber("joy", Joy, callback)
     # starts the node

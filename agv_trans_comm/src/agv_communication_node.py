@@ -37,6 +37,8 @@ def callback_commandcenter(data):
         refresh_view(self)
     
     if (last_run_recieved == False and current_state == "finished"):
+        print('in reset')
+        global current_state
         current_state = "init"
         agv_state.state = current_state
     #always anser a publish with a publish.
@@ -50,6 +52,7 @@ def callback_button_state(data):
     #print ("bpressed: " + data.bpress + '\n')
     if (current_state == "init"):
         if (data.xpress == True):
+            print('sending execute')
             current_state = "executing"
             current_cmd = last_command_recieved
             agv_state.state = current_state
@@ -58,6 +61,7 @@ def callback_button_state(data):
     # if B is pressed, set status and send
     if (current_state == "executing"):
         if (data.bpress == True):
+            print('sending finished')
             current_state = "finished"
             agv_state.state = current_state
             current_cmd = ""
@@ -76,14 +80,14 @@ def start():
     global last_command_recieved
     global last_run_recieved
     global last_product_recieved
-    global current_state
     global current_cmd
     global ccpub
     last_command_recieved = ""
     last_product_recieved = ""
     last_run_recieved = False
     current_cmd = ""
-    current_state = "init"
+    global current_state 
+    current_state= "init"
     agv_state.message = ""
     agv_state.cmd = ""
     agv_state.state = ""

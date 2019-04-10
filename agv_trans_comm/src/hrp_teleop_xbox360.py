@@ -27,26 +27,29 @@ def callback(data):
     buttonpress.apress = False  # TESTING
     buttonpress.ypress = False  # TESTING
     if (data.buttons[9]== 1):
+        print('stoppressed')
         twist.linear.x = 0*data.axes[1]
         twist.angular.z = 0*data.axes[0]
     if (data.buttons[2]== 1):
+        print('Xpressed')
         buttonpress.xpress = True
-        #buttonpub.publish(buttonpress)  
+        buttonpub.publish(buttonpress)  
     if (data.buttons[1]== 1):
+        print('Bpressed')
         buttonpress.bpress = True
-        #buttonpub.publish(buttonpress)
-    
-    pub.publish(twist)
+        buttonpub.publish(buttonpress)
     # ----------- START TESTING ----------------
     if (data.buttons[0]== 1):
+        print('Apressed')
         buttonpress.apress = True
-        #buttonpub.publish(buttonpress)  
+        buttonpub.publish(buttonpress)  
     if (data.buttons[3]== 1):
+        print('Ypressed')
         buttonpress.ypress = True
-        #buttonpub.publish(buttonpress)
+        buttonpub.publish(buttonpress)
     # ----------- END TESTING ----------------
-    buttonpub.publish(buttonpress)
-
+    
+    pub.publish(twist)
 
 
 # Intializes everything

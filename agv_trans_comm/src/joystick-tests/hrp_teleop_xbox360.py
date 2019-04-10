@@ -2,7 +2,7 @@
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
-from hrp_translate.msg import ButtonPress
+from agv_trans_comm.msg import ButtonPress
 
 # Author: Marcus Lindvärn
 # This ROS Node converts Joystick inputs from the joy node
@@ -21,9 +21,18 @@ def callback(data):
     twist.linear.x = 0.4*data.axes[1]
     # horizontal left stick axis = turn rate
     twist.angular.z = 0.7*data.axes[0]
+    buttonpress.xpress = True
+    buttonpress.bpress = False
     if (data.buttons[9]== 1):
         twist.linear.x = 0*data.axes[1]
         twist.angular.z = 0*data.axes[0]
+    if (data.buttons[2]== 1):
+        buttonpress.xpress = True
+        buttonpub.publish(buttonpress)  
+    if (data.buttons[1]== 1):
+        buttonpress.bpress = True
+        buttonpub.publish(buttonpress)
+    
     pub.publish(twist)
 
 # Intializes everything
@@ -32,7 +41,7 @@ def start():
     global pub
     pub = rospy.Publisher('/cmd_vel', Twist)
     global buttonpub
-    buttonpub = rospy.Publisher('/cmd_vel', Twist)
+    buttonpub = rospy.Publisher('/button_state', Twist)
     # subscribed to joystick inputs on topic "joy"
     rospy.Subscriber("joy", Joy, callback)
     # starts the node

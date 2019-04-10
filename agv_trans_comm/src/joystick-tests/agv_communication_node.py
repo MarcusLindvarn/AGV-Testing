@@ -21,8 +21,7 @@ def __init__ (self)
     agv_state.state = ""
 '''
 def callback_commandcenter(data):
-    # update current and lastrecieved product to the recieved data - kanske kan skita i det helt och hållat då jag isnt svarar med ngt sådant
-    #agv_state = State()
+    # update current and lastrecieved product to the recieved data - might skip
     #last_product_recieved = data.product_name
     #agv_state.product_name = last_product_recieved
     last_run_recieved = data.run
@@ -36,34 +35,34 @@ def callback_commandcenter(data):
         agv_state.cmd = current_cmd
         refresh_view(self)
     
-    if (last_run_recieved == False and current_state == "finished")
+    if (last_run_recieved == False and current_state == "finished"):
         current_state = "init"
         agv_state.state = current_state
-    #publisha alltid på mottaget meddelande med current status.
+    #always anser a publish with a publish.
     ccpub.publish(agv_state)
 
 
 def callback_button_state(data):
     #agv_state = State()
-    # om X är nedtryckt, sät status till executing och publisha
+    # if X is pressed, set status and send
     print ("xpressed: " + data.xpressed + '\n')
     print ("bpressed: " + data.bpressed + '\n')
-    if (data.xpressed = True):
+    if (data.xpressed == True):
         current_state = "executing"
         current_cmd = last_command_recieved
         agv_state.state = current_state
         agv_state.cmd = current_cmd
     
-    #om B är nedtrykt så sätt till finished, tömm cmd
-    if (data.bpressed = True):
+    # if B is pressed, set status and send
+    if (data.bpressed == True):
         current_state = "finished"
         agv_state.state = current_state
         current_cmd = ""
         agv_state.cmd = current_cmd
-    #publicera med de nya ändringarna
+    #Publish with new changes
     ccpub.publish(agv_state)
 
-def refresh_view(self)
+def refresh_view(self):
     print('Last command: ' + last_command_recieved)
 
 # Intializes everything

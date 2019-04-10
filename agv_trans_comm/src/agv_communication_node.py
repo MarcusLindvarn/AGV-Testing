@@ -51,7 +51,7 @@ def callback_button_state(data):
     if (current_state == "init"):
         if (data.xpress == True):
             current_state = "executing"
-          current_cmd = last_command_recieved
+           current_cmd = last_command_recieved
            agv_state.state = current_state
            agv_state.cmd = current_cmd
     

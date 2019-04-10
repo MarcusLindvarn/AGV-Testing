@@ -3,7 +3,7 @@
 import rospy
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import Joy
-from agv_trans_comm.msg import ButtonPress
+from agv_trans_comm.msg import ButtonPressed
 from agv_trans_comm.msg import Command
 from agv_trans_comm.msg import State
 
@@ -90,7 +90,7 @@ def start():
     ccpub = rospy.Publisher('/AGV_state', State)
     #subscribing to the comandcenter topic as well as the buttionstates from the teleop.
     rospy.Subscriber("/commandcenter", Command, callback_commandcenter)
-    rospy.Subscriber("/button_state", ButtonPress, callback_button_state)
+    rospy.Subscriber("/button_state", ButtonPressed, callback_button_state)
     # starts the node
     rospy.init_node('AGVComms_node')
     rospy.spin()

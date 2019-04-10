@@ -25,11 +25,12 @@ def callback_commandcenter(data):
     #last_product_recieved = data.product_name
     #agv_state.product_name = last_product_recieved
     last_run_recieved = data.run
-
+    
     #if a new command is recieved, update current command and refresh the view
+    print ("last_command_recieved: " + last_command_recieved + '\n')
+    print ("data.command: " + data.command + '\n')
+    print (last_command_recieved != data.command)
     if (last_command_recieved != data.command):
-        print ("last_command_recieved: " + last_command_recieved + '\n')
-        print ("data.command: " + data.command + '\n')
         last_command_recieved = data.command
         current_cmd = data.command
         agv_state.cmd = current_cmd
@@ -45,20 +46,22 @@ def callback_commandcenter(data):
 def callback_button_state(data):
     #agv_state = State()
     # if X is pressed, set status and send
-    print ("xpressed: " + data.xpressed + '\n')
-    print ("bpressed: " + data.bpressed + '\n')
-    if (data.xpressed == True):
-        current_state = "executing"
-        current_cmd = last_command_recieved
-        agv_state.state = current_state
-        agv_state.cmd = current_cmd
+    #print ("xpressed: " + data.xpress + '\n')
+    #print ("bpressed: " + data.bpress + '\n')
+    if (current_state == "init"):
+        if (data.xpress == True):
+            current_state = "executing"
+          current_cmd = last_command_recieved
+           agv_state.state = current_state
+           agv_state.cmd = current_cmd
     
     # if B is pressed, set status and send
-    if (data.bpressed == True):
-        current_state = "finished"
-        agv_state.state = current_state
-        current_cmd = ""
-        agv_state.cmd = current_cmd
+    if (current_state == "executing"):
+        if (data.bpress == True):
+            current_state = "finished"
+            agv_state.state = current_state
+            current_cmd = ""
+            agv_state.cmd = current_cmd
     #Publish with new changes
     ccpub.publish(agv_state)
 
@@ -67,8 +70,9 @@ def refresh_view(self):
 
 # Intializes everything
 def start():    
+    global agv_state 
     agv_state = State()
-    __init__(self)
+    #__init__(self)
     global last_command_recieved
     global last_run_recieved
     global last_product_recieved
@@ -85,7 +89,7 @@ def start():
     agv_state.state = ""
     ccpub = rospy.Publisher('/AGV_state', State)
     #subscribing to the comandcenter topic as well as the buttionstates from the teleop.
-    rospy.Subscriber("/commandcenter", command, callback_commandcenter)
+    rospy.Subscriber("/commandcenter", Command, callback_commandcenter)
     rospy.Subscriber("/button_state", ButtonPress, callback_button_state)
     # starts the node
     rospy.init_node('AGVComms_node')

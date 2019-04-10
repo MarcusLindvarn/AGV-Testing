@@ -22,7 +22,7 @@ def callback(data):
     twist.linear.x = 0.4*data.axes[1]
     # horizontal left stick axis = turn rate
     twist.angular.z = 0.7*data.axes[0]
-    buttonpress.xpress = True
+    buttonpress.xpress = False
     buttonpress.bpress = False
     if (data.buttons[9]== 1):
         twist.linear.x = 0*data.axes[1]
@@ -42,7 +42,7 @@ def start():
     global pub
     pub = rospy.Publisher('/cmd_vel', Twist)
     global buttonpub
-    buttonpub = rospy.Publisher('/button_state', Twist)
+    buttonpub = rospy.Publisher('/button_state', ButtonPress)
     # subscribed to joystick inputs on topic "joy"
     rospy.Subscriber("joy", Joy, callback)
     # starts the node
